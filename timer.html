@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Timer</title>
+    <script type="text/javascript">
+
+      let timers, startTimeStamp;
+      console.log(timers);
+      timers = { '0' :
+            {
+              'running': false,
+              'totalTime':'0'
+            }
+          };
+      if (window.localStorage.getItem('timersString') != null) {
+        timers = JSON.parse(window.localStorage.getItem('timersString'));
+      }
+      console.log(timers);
+
+
+      function start() {
+        stop();
+        const id = (event.srcElement.parentElement.dataset.id);
+        startTimeStamp = Date.now();
+        timers[id].running = true;
+        console.log('START');
+        console.log(timers);
+      }
+
+      function stop() {
+        for (var key of Object.keys(timers)) {
+          timers[key].running = false;
+        }
+        console.log('STOP ALL');
+        console.log(timers);
+      }
+
+      function updateValues() {
+        for (var key of Object.keys(timers)) {
+          if (timers[key].running) {
+
+            var elapsed = Math.floor((Date.now() - startTimeStamp)/1000)
+            timers[key].totalTime = parseInt(timers[key].totalTime) + elapsed;
+
+            window.localStorage.setItem('timersString', JSON.stringify(timers));
+
+          }
+
+        }
+
+      }
+
+      function initTimers() {
+        for (var key of Object.keys(timers)) {
+          addElement(key);
+        }
+      }
+
+      function addElement(key) {
+        let newKey;
+        if (key == undefined) {
+          const highestKey = Math.max(...Object.keys(timers));
+          newKey = Object.keys(timers).length > 0 ? highestKey + 1 : 1;
+          timers[newKey] = {
+            'running': false,
+            'totalTime':'0'
+          };
+        } else {
+          newKey = key;
+        }
+
+        const newTimer = document.createElement("div");
+        newTimer.setAttribute('class','timer');
+        newTimer.dataset.id = newKey;
+        const title = document.createElement("input");
+        const description = document.createElement("textarea");
+        const start = document.createElement("button");
+        start.name="Start";
+        start.innerText="Start";
+        start.setAttribute("onclick", "start()");
+        const stop = document.createElement("button");
+        stop.name="Stop";
+        stop.innerText="Stop";
+        stop.setAttribute("onclick", "stop()");
+        const elapsed = document.createElement("span");
+        elapsed.innerText = timers[newKey].totalTime;
+
+        document.getElementById("timers").appendChild(newTimer);
+        newTimer.appendChild(title);
+        newTimer.appendChild(description);
+        newTimer.appendChild(start);
+        newTimer.appendChild(stop);
+        newTimer.appendChild(elapsed);
+
+        console.log(timers);
+      }
+
+
+      window.addEventListener('DOMContentLoaded', function() {
+          initTimers();
+          setInterval(updateValues, 100);
+      });
+
+
+    </script>
+    <style media="screen">
+
+    </style>
+  </head>
+  <body>
+      <button type="button" name="add" onclick="addElement()">Add Timer</button>
+      <div id="timers">
+      </div>
+  </body>
+</html>
