@@ -5,60 +5,86 @@
     <title>Timer</title>
     <script type="text/javascript">
 
+
+    /*
+    ================================
+     INITIALIZE
+    ================================
+    */
+
+      // Initialize global variables.
       let timers, startTimeStamp;
-      console.log(timers);
-      timers = { '0' :
+
+      // Define a default timer object
+      defaultTimers = { '0' :
             {
               'running': false,
               'totalTime':'0'
             }
           };
+
+      // Check for existing timer data saved in localStorage. If data already exists, use it. Otherwise use the default.
       if (window.localStorage.getItem('timersString') != null) {
         timers = JSON.parse(window.localStorage.getItem('timersString'));
+      } else {
+        timers = defaultTimers;
       }
-      console.log(timers);
 
 
+      /*
+      ================================
+       FUNCTIONS
+      ================================
+      */
+
+      // Start timer
       function start() {
+        // Stop all other timers
         stop();
+        // Get ID of timer to start
         const id = (event.srcElement.parentElement.dataset.id);
+        // Set the start timestamp to now
         startTimeStamp = Date.now();
+        // Set the timer running flag to true
         timers[id].running = true;
-        console.log('START');
-        console.log(timers);
       }
 
+      // Stop (all) timers
+      // Loop through all timers and set the running flags to false
       function stop() {
         for (var key of Object.keys(timers)) {
           timers[key].running = false;
         }
-        console.log('STOP ALL');
-        console.log(timers);
       }
 
+      // Update the running timers values
       function updateValues() {
+        // Loop through all timers and check if the running flag is true
         for (var key of Object.keys(timers)) {
           if (timers[key].running) {
-
+            // Calculate the elapsed time by the difference of the start timestamp and now
             var elapsed = Math.floor((Date.now() - startTimeStamp)/1000)
+            // Update the timer total time value
             timers[key].totalTime = parseInt(timers[key].totalTime) + elapsed;
-
+            // Update localStorage for data persitence
             window.localStorage.setItem('timersString', JSON.stringify(timers));
-
           }
-
         }
-
       }
 
+      // Initialize displayed timers
       function initTimers() {
+        // Loop through all timers, add HTML elements for each one.
         for (var key of Object.keys(timers)) {
           addElement(key);
         }
       }
 
+      // Build displayed timers
       function addElement(key) {
         let newKey;
+        // If this is called from the "Add Timer" button click, the key will be undefined.
+        // Find the highest existing key and increment by one.
         if (key == undefined) {
           const highestKey = Math.max(...Object.keys(timers));
           newKey = Object.keys(timers).length > 0 ? highestKey + 1 : 1;
@@ -66,10 +92,12 @@
             'running': false,
             'totalTime':'0'
           };
+        // If this is called from the initializer, use the key that is passed as a paramater,
         } else {
           newKey = key;
         }
 
+        // Build HTML elements
         const newTimer = document.createElement("div");
         newTimer.setAttribute('class','timer');
         newTimer.dataset.id = newKey;
@@ -86,16 +114,29 @@
         const elapsed = document.createElement("span");
         elapsed.innerText = timers[newKey].totalTime;
 
+        // Append HTML elements
         document.getElementById("timers").appendChild(newTimer);
         newTimer.appendChild(title);
         newTimer.appendChild(description);
         newTimer.appendChild(start);
         newTimer.appendChild(stop);
         newTimer.appendChild(elapsed);
-
-        console.log(timers);
       }
 
+      // Clear all timers
+      function clearAll() {
+        // Stop all timers
+        stop();
+        // Reset localStorage to the default timer object.
+        window.localStorage.setItem('timersString', JSON.stringify(defaultTimers));
+      }
+
+
+      /*
+      ================================
+       RUN
+      ================================
+      */
 
       window.addEventListener('DOMContentLoaded', function() {
           initTimers();
@@ -110,6 +151,7 @@
   </head>
   <body>
       <button type="button" name="add" onclick="addElement()">Add Timer</button>
+      <button type="button" name="clear" onclick="clearAll()">Clear All Timers</button>
       <div id="timers">
       </div>
   </body>
