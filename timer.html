@@ -14,7 +14,7 @@
     */
 
       // Initialize global variables.
-      let timers, startTimeStamp;
+      let timers;
 
       // Define a default timer object
       defaultTimers = { '0' :
@@ -22,6 +22,7 @@
               'title' : '',
               'description' : '',
               'running': false,
+              'lastTick': null,
               'totalTime':'0'
             }
           };
@@ -32,7 +33,6 @@
       } else {
         timers = defaultTimers;
       }
-
 
       /*
       ================================
@@ -47,7 +47,7 @@
         // Get ID of timer to start
         const id = (event.srcElement.parentElement.dataset.id);
         // Set the start timestamp to now
-        startTimeStamp = Date.now();
+        timers[id].lastTick = Date.now();
         // Set the timer running flag to true
         timers[id].running = true;
       }
@@ -55,24 +55,24 @@
       // Stop (all) timers
       // Loop through all timers and set the running flags to false
       function stop() {
-        console.log('STOP');
         for (var key of Object.keys(timers)) {
-          console.log(timers[key]);
           timers[key].running = false;
         }
       }
 
-      // Update the running timers values
-      function updateValues() {
+      // Ticker
+      function tick() {
         // Loop through all timers and check if the running flag is true
         for (var key of Object.keys(timers)) {
           if (timers[key].running) {
-            // Calculate the elapsed time by the difference of the start timestamp and now
-            var elapsed = Math.floor((Date.now() - startTimeStamp)/1000)
-            // Update the timer total time value
+            // Calculate the elapsed time by the difference of the last tick and now
+            var elapsed = (Date.now() - timers[key].lastTick);
+            // Reset the last tick
+            timers[key].lastTick = Date.now();
+            // Add the accumulated time
             timers[key].totalTime = parseInt(timers[key].totalTime) + elapsed;
             // Update the displayed time
-            document.querySelector('.timer[data-id="'+key+'"] span').innerText = timers[key].totalTime;
+            document.querySelector('.timer[data-id="'+key+'"] span').innerText = Math.floor(timers[key].totalTime/1000);
           }
         }
       }
@@ -158,7 +158,7 @@
 
       window.addEventListener('DOMContentLoaded', function() {
           initTimers();
-          setInterval(updateValues, 1000);
+          setInterval(tick, 500);
       });
     </script>
 
