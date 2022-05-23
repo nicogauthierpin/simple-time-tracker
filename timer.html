@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Timer</title>
+
     <script type="text/javascript">
 
 
@@ -18,6 +19,8 @@
       // Define a default timer object
       defaultTimers = { '0' :
             {
+              'title' : '',
+              'description' : '',
               'running': false,
               'totalTime':'0'
             }
@@ -52,7 +55,9 @@
       // Stop (all) timers
       // Loop through all timers and set the running flags to false
       function stop() {
+        console.log('STOP');
         for (var key of Object.keys(timers)) {
+          console.log(timers[key]);
           timers[key].running = false;
         }
       }
@@ -66,8 +71,8 @@
             var elapsed = Math.floor((Date.now() - startTimeStamp)/1000)
             // Update the timer total time value
             timers[key].totalTime = parseInt(timers[key].totalTime) + elapsed;
-            // Update localStorage for data persitence
-            window.localStorage.setItem('timersString', JSON.stringify(timers));
+            // Update the displayed time
+            document.querySelector('.timer[data-id="'+key+'"] span').innerText = timers[key].totalTime;
           }
         }
       }
@@ -89,6 +94,8 @@
           const highestKey = Math.max(...Object.keys(timers));
           newKey = Object.keys(timers).length > 0 ? highestKey + 1 : 1;
           timers[newKey] = {
+            'title' : '',
+            'description' : '',
             'running': false,
             'totalTime':'0'
           };
@@ -101,16 +108,24 @@
         const newTimer = document.createElement("div");
         newTimer.setAttribute('class','timer');
         newTimer.dataset.id = newKey;
+
         const title = document.createElement("input");
+        title.value = timers[newKey].title;
+
+
         const description = document.createElement("textarea");
+        description.value = timers[newKey].description;
+
         const start = document.createElement("button");
         start.name="Start";
         start.innerText="Start";
         start.setAttribute("onclick", "start()");
+
         const stop = document.createElement("button");
         stop.name="Stop";
         stop.innerText="Stop";
         stop.setAttribute("onclick", "stop()");
+
         const elapsed = document.createElement("span");
         elapsed.innerText = timers[newKey].totalTime;
 
@@ -127,8 +142,11 @@
       function clearAll() {
         // Stop all timers
         stop();
-        // Reset localStorage to the default timer object.
-        window.localStorage.setItem('timersString', JSON.stringify(defaultTimers));
+      }
+
+      // Update localStorage for data persistence
+      function updateLocalStorage() {
+        window.localStorage.setItem('timersString', JSON.stringify(timers));
       }
 
 
@@ -140,14 +158,14 @@
 
       window.addEventListener('DOMContentLoaded', function() {
           initTimers();
-          setInterval(updateValues, 100);
+          setInterval(updateValues, 1000);
       });
-
-
     </script>
+
     <style media="screen">
 
     </style>
+
   </head>
   <body>
       <button type="button" name="add" onclick="addElement()">Add Timer</button>
