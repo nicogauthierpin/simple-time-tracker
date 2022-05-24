@@ -7,66 +7,16 @@
     <script type="text/javascript">
 
 
-    /*
-    ================================
-     INITIALIZE
-    ================================
-    */
-
-      // Initialize global variables.
-      let timers;
-
-      // Define a default timer object
-      const defaultTimers = { '0' :
-            {
-              'title' : '',
-              'description' : '',
-              'running': false,
-              'lastTick': null,
-              'totalTime':'0'
-            }
-          };
-
-      // Check for existing timer data saved in localStorage. If data already exists, use it. Otherwise use the default.
-      if (window.localStorage.getItem('timersString') != null) {
-        timers = JSON.parse(window.localStorage.getItem('timersString'));
-      } else {
-        // Clone the default value into timers with a little workaround.
-        timers = JSON.parse(JSON.stringify(defaultTimers));
-      }
-
       /*
       ================================
-       FUNCTIONS
+       TICKER
       ================================
       */
 
-      // Start timer
-      function start() {
-        // Stop all other timers
-        stop();
-        // Get ID of timer to start
-        const id = (event.srcElement.parentElement.dataset.id);
-        // Set the start timestamp to now
-        timers[id].lastTick = Date.now();
-        // Set the timer running flag to true
-        timers[id].running = true;
-      }
-
-      // Stop (all) timers
-      // Loop through all timers and set the running flags to false
-      function stop() {
-        for (var key of Object.keys(timers)) {
-          timers[key].running = false;
-          document.querySelector('.timer[data-id="'+key+'"] span.status').innerText = '';
-        }
-      }
-
-      // Ticker
       function tick() {
-        console.log('tick');
-        // Loop through all timers and check if the running flag is true
+        // Loop through all timers
         for (var key of Object.keys(timers)) {
+          // If timer is running...
           if (timers[key].running) {
             // Calculate the elapsed time by the difference of the last tick and now
             var elapsed = (Date.now() - timers[key].lastTick);
@@ -74,85 +24,68 @@
             timers[key].lastTick = Date.now();
             // Add the accumulated time
             timers[key].totalTime = parseInt(timers[key].totalTime) + elapsed;
-            // Update the status
-            document.querySelector('.timer[data-id="'+key+'"] span.status').innerText = ' [running] ';
-            // Update the displayed time in minutes
+            // Update the displayed time. This is the only place where a view update happens outside a full redraw, for performace sake.
             document.querySelector('.timer[data-id="'+key+'"] span.totaltime').innerText = toHrsMins(Math.floor(timers[key].totalTime/60000));
           }
         }
-        // update localStorage
-        updateLocalStorage();
+        // update localStorage for data persistence
+        window.localStorage.setItem('timersString', JSON.stringify(timers));
       }
 
-      // Initialize displayed timers
-      function initTimers() {
-        // Clear any old HTML
-        let container = document.getElementById("timers");
-        while (container.firstChild) {
-          container.removeChild(container.firstChild);
-        }
-        // Loop through all timers, add HTML elements for each one.
+      /*
+      ================================
+       HELPER FUNCTIONS
+      ================================
+      */
+
+      function redraw() {
+        // Remove old nodes
+        document.getElementById("timers").replaceChildren();
+        
+        // Loop through all data and recreate nodes
         for (var key of Object.keys(timers)) {
-          addElement(key);
+
+          // Build nodes
+          const newTimer = document.createElement("div");
+          newTimer.setAttribute('class','timer');
+          newTimer.dataset.id = key;
+
+          const title = document.createElement("input");
+          title.value = timers[key].title;
+
+          const description = document.createElement("textarea");
+          description.value = timers[key].description;
+
+          const start = document.createElement("button");
+          start.innerText="Start";
+          start.setAttribute('class','action-start');
+
+          const stop = document.createElement("button");
+          stop.innerText="Stop";
+          stop.setAttribute('class','action-stop');
+
+          const remove = document.createElement("button");
+          remove.innerText="Remove";
+          remove.setAttribute('class','action-remove');
+
+          const status = document.createElement("span");
+          status.setAttribute('class','status');
+          status.innerText = timers[key].running ? ' [running] ' : '';
+
+          const elapsed = document.createElement("span");
+          elapsed.setAttribute('class','totaltime');
+          elapsed.innerText = toHrsMins(Math.floor(timers[key].totalTime/60000));
+
+          // Append HTML elements
+          document.getElementById("timers").appendChild(newTimer);
+          newTimer.appendChild(title);
+          newTimer.appendChild(description);
+          newTimer.appendChild(start);
+          newTimer.appendChild(stop);
+          newTimer.appendChild(remove);
+          newTimer.appendChild(status);
+          newTimer.appendChild(elapsed);
         }
-      }
-
-      // Build displayed timers
-      function addElement(key) {
-        let newKey;
-        // If this is called from the "Add Timer" button click, the key will be undefined.
-        // Find the highest existing key and increment by one.
-        if (key == undefined) {
-          const highestKey = Math.max(...Object.keys(timers));
-          newKey = Object.keys(timers).length > 0 ? highestKey + 1 : 1;
-          timers[newKey] = {
-            'title' : '',
-            'description' : '',
-            'running': false,
-            'totalTime':'0'
-          };
-        // If this is called from the initializer, use the key that is passed as a paramater,
-        } else {
-          newKey = key;
-        }
-
-        // Build HTML elements
-        const newTimer = document.createElement("div");
-        newTimer.setAttribute('class','timer');
-        newTimer.dataset.id = newKey;
-
-        const title = document.createElement("input");
-        title.value = timers[newKey].title;
-
-
-        const description = document.createElement("textarea");
-        description.value = timers[newKey].description;
-
-        const start = document.createElement("button");
-        start.name="Start";
-        start.innerText="Start";
-        start.setAttribute("onclick", "start()");
-
-        const stop = document.createElement("button");
-        stop.name="Stop";
-        stop.innerText="Stop";
-        stop.setAttribute("onclick", "stop()");
-
-        const status = document.createElement("span");
-        status.setAttribute('class','status');
-
-        const elapsed = document.createElement("span");
-        elapsed.setAttribute('class','totaltime');
-        elapsed.innerText = toHrsMins(Math.floor(timers[newKey].totalTime/60000));
-
-        // Append HTML elements
-        document.getElementById("timers").appendChild(newTimer);
-        newTimer.appendChild(title);
-        newTimer.appendChild(description);
-        newTimer.appendChild(start);
-        newTimer.appendChild(stop);
-        newTimer.appendChild(status);
-        newTimer.appendChild(elapsed);
       }
 
       function toHrsMins(time) {
@@ -162,28 +95,101 @@
           return hours + ':' + minutes;
       }
 
-      // Clear all timers
-      function clearAll() {
-        // Stop all timers
-        stop();
-        // Clear timers object
-        // (Clone the default value into timers)
-        timers = JSON.parse(JSON.stringify(defaultTimers));
-        console.log('--defaultTimers--');
-        console.log(defaultTimers);
-        console.log('--timers--');
-        console.log(timers);
-        // Clear localStorage
-        window.localStorage.removeItem('timersString');
-        // Re-initialize displayed timers
-        initTimers();
+      /*
+      ================================
+       EVENT HANDLERS
+      ================================
+      */
+
+      function clickHandler() {
+        switch (event.target.className) {
+          case 'action-start':
+            // Set all running flags to false
+            for (var key of Object.keys(timers)) {
+              timers[key].running = false;
+            }
+            // Set running flag to true and last tick to now
+            timers[event.srcElement.parentElement.dataset.id].running = true;
+            timers[event.srcElement.parentElement.dataset.id].lastTick = Date.now();
+            // Redraw
+            redraw();
+            break;
+
+          case 'action-stop':
+            // Set all running flags to false
+            for (var key of Object.keys(timers)) {
+              timers[key].running = false;
+            }
+            // Redraw
+            redraw();
+            break;
+
+          case 'action-remove':
+            // Remove selected timer
+            timers.splice(event.srcElement.parentElement.dataset.id,1);
+            // Redraw
+            redraw();
+            break;
+
+          case 'action-add':
+            // Find the highest key, add one and clone the default timer object
+            const highestKey = Math.max(...Object.keys(timers));
+            newKey = Object.keys(timers).length > 0 ? highestKey + 1 : 1;
+            timers[newKey] = JSON.parse(JSON.stringify(defaultTimer));
+            // Redraw
+            redraw();
+            break;
+
+          case 'action-clear-all':
+            // Clear timers object
+            timers.length = 0;
+            // (Clone the default value into timers)
+            timers[0] = JSON.parse(JSON.stringify(defaultTimer));
+            // Clear localStorage
+            window.localStorage.removeItem('timersString');
+            // Redraw
+            redraw();
+            break;
+
+          }
       }
 
-      // Update localStorage for data persistence
-      function updateLocalStorage() {
-        window.localStorage.setItem('timersString', JSON.stringify(timers));
+      function focusOutHandler() {
+        // Save any updates to the title and description on focus out
+        if(event.target.localName == 'input' || event.target.localName == 'textarea') {
+          for (var key of Object.keys(timers)) {
+            timers[key].title = document.querySelector('.timer[data-id="'+key+'"] input').value;
+            timers[key].description = document.querySelector('.timer[data-id="'+key+'"] textarea').value;
+          }
+        }
       }
 
+
+      /*
+      ================================
+       INITIALIZE
+      ================================
+      */
+
+        // Initialize global variables.
+        let timers = [];
+
+        // Define a default timer object
+        const defaultTimer = {
+                'title' : '',
+                'description' : '',
+                'running': false,
+                'lastTick': null,
+                'totalTime':'0'
+            };
+
+        // Check for existing timer data saved in localStorage. If data already exists, use it. Otherwise use the default.
+        if (window.localStorage.getItem('timersString') != null) {
+          timers = JSON.parse(window.localStorage.getItem('timersString'));
+        } else {
+          // Clone the default value into timers, using a little json workaround.
+          timers[0] = JSON.parse(JSON.stringify(defaultTimer));
+        }
 
       /*
       ================================
@@ -192,9 +198,14 @@
       */
 
       window.addEventListener('DOMContentLoaded', function() {
-          initTimers();
-          setInterval(tick, 1000);
+          redraw();
+          setInterval(tick, 20000); // 20 seconds tick interval, more than enough since the time is only displayed in minutes.
+          document.body.addEventListener('click', clickHandler);
+          document.body.addEventListener('focusout', focusOutHandler); // foucusout instead of blur, because blur doesn't bubble
       });
+
+
+
     </script>
 
     <style media="screen">
@@ -203,8 +214,8 @@
 
   </head>
   <body>
-      <button type="button" name="add" onclick="addElement()">Add Timer</button>
-      <button type="button" name="clear" onclick="clearAll()">Clear All Timers</button>
+      <button type="button" class="action-add">Add Timer</button>
+      <button type="button" class="action-clear-all">Clear All Timers</button>
       <div id="timers">
       </div>
   </body>
