@@ -30,6 +30,7 @@
         }
         // update localStorage for data persistence
         window.localStorage.setItem('timersString', JSON.stringify(timers));
+        console.log('Update Local');
       }
 
       /*
@@ -111,6 +112,9 @@
             // Set running flag to true and last tick to now
             timers[event.srcElement.parentElement.dataset.id].running = true;
             timers[event.srcElement.parentElement.dataset.id].lastTick = Date.now();
+            // update localStorage for data persistence
+            window.localStorage.setItem('timersString', JSON.stringify(timers));
+            console.log('Update Local');
             // Redraw
             redraw();
             break;
@@ -120,6 +124,9 @@
             for (var key of Object.keys(timers)) {
               timers[key].running = false;
             }
+            // update localStorage for data persistence
+            window.localStorage.setItem('timersString', JSON.stringify(timers));
+            console.log('Update Local');
             // Redraw
             redraw();
             break;
@@ -127,6 +134,9 @@
           case 'action-remove':
             // Remove selected timer
             timers.splice(event.srcElement.parentElement.dataset.id,1);
+            // update localStorage for data persistence
+            window.localStorage.setItem('timersString', JSON.stringify(timers));
+            console.log('Update Local');
             // Redraw
             redraw();
             break;
@@ -136,6 +146,9 @@
             const highestKey = Math.max(...Object.keys(timers));
             newKey = Object.keys(timers).length > 0 ? highestKey + 1 : 1;
             timers[newKey] = JSON.parse(JSON.stringify(defaultTimer));
+            // update localStorage for data persistence
+            window.localStorage.setItem('timersString', JSON.stringify(timers));
+            console.log('Update Local');
             // Redraw
             redraw();
             break;
@@ -145,8 +158,9 @@
             timers.length = 0;
             // (Clone the default value into timers)
             timers[0] = JSON.parse(JSON.stringify(defaultTimer));
-            // Clear localStorage
-            window.localStorage.removeItem('timersString');
+            // update localStorage for data persistence
+            window.localStorage.setItem('timersString', JSON.stringify(timers));
+            console.log('Update Local');
             // Redraw
             redraw();
             break;
