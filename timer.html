@@ -4,6 +4,58 @@
     <meta charset="utf-8">
     <title>Timer</title>
 
+    <style media="screen">
+      body {
+        background-color: #e4e4e4;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        margin: 0;
+      }
+
+      #timers {
+        width: 90%;
+        max-width: 480px;
+        margin: 1em auto;
+      }
+      .timer {
+        margin-bottom: 2em;
+      }
+      button {
+        border: none;
+        background: #386faf;
+        color: #ffffff;
+        border-radius: 6px;
+        padding: 6px 18px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      input,textarea {
+        border: 1px solid #c0c0c0;
+        border-radius: 6px;
+        padding: 6px;
+        display: block;
+        width: calc(100% - 14px);
+        margin-bottom: 0.5em;
+      }
+
+      button.action-start {
+        background-color: #2cb902;
+      }
+
+      button.action-stop {
+        background-color: #bd1212;
+      }
+      button.action-add {
+        display: block;
+        width: 90%;
+        max-width: 480px;
+        margin: 0 auto;
+
+      }      
+    </style>
+
+
     <script type="text/javascript">
 
 
@@ -51,6 +103,9 @@
           newTimer.setAttribute('class','timer');
           newTimer.dataset.id = key;
 
+          const textWrap = document.createElement("div");
+          const buttonsWrap = document.createElement("div");
+
           const title = document.createElement("input");
           title.value = timers[key].title;
 
@@ -79,13 +134,16 @@
 
           // Append HTML elements
           document.getElementById("timers").appendChild(newTimer);
-          newTimer.appendChild(title);
-          newTimer.appendChild(description);
-          newTimer.appendChild(start);
-          newTimer.appendChild(stop);
-          newTimer.appendChild(remove);
-          newTimer.appendChild(status);
-          newTimer.appendChild(elapsed);
+          newTimer.appendChild(textWrap);
+          textWrap.appendChild(title);
+          textWrap.appendChild(description);
+          textWrap.appendChild(status);
+          textWrap.appendChild(elapsed);
+          newTimer.appendChild(buttonsWrap);
+          buttonsWrap.appendChild(start);
+          buttonsWrap.appendChild(stop);
+          buttonsWrap.appendChild(remove);
+
         }
       }
 
@@ -103,6 +161,7 @@
       */
 
       function clickHandler() {
+        console.log(event.srcElement.parentElement.parentElement);
         switch (event.target.className) {
           case 'action-start':
             // Set all running flags to false
@@ -110,8 +169,8 @@
               timers[key].running = false;
             }
             // Set running flag to true and last tick to now
-            timers[event.srcElement.parentElement.dataset.id].running = true;
-            timers[event.srcElement.parentElement.dataset.id].lastTick = Date.now();
+            timers[event.srcElement.parentElement.parentElement.dataset.id].running = true;
+            timers[event.srcElement.parentElement.parentElement.dataset.id].lastTick = Date.now();
             // update localStorage for data persistence
             window.localStorage.setItem('timersString', JSON.stringify(timers));
             console.log('Update Local');
@@ -133,7 +192,7 @@
 
           case 'action-remove':
             // Remove selected timer
-            timers.splice(event.srcElement.parentElement.dataset.id,1);
+            timers.splice(event.srcElement.parentElement.parentElement.dataset.id,1);
             // update localStorage for data persistence
             window.localStorage.setItem('timersString', JSON.stringify(timers));
             console.log('Update Local');
@@ -222,15 +281,11 @@
 
     </script>
 
-    <style media="screen">
-
-    </style>
-
   </head>
   <body>
-      <button type="button" class="action-add">Add Timer</button>
       <button type="button" class="action-clear-all">Clear All Timers</button>
       <div id="timers">
       </div>
+      <button type="button" class="action-add">+</button>
   </body>
 </html>
