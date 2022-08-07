@@ -100,7 +100,10 @@
 
           // Build nodes
           const newTimer = document.createElement("div");
-          newTimer.setAttribute('class','timer');
+          newTimer.classList.add('timer');
+          if(timers[key].running) {
+            newTimer.classList.add('running');
+          }
           newTimer.dataset.id = key;
 
           const textWrap = document.createElement("div");
@@ -114,22 +117,22 @@
 
           const start = document.createElement("button");
           start.innerText="Start";
-          start.setAttribute('class','action-start');
+          start.classList.add('action-start');
 
           const stop = document.createElement("button");
           stop.innerText="Stop";
-          stop.setAttribute('class','action-stop');
+          stop.classList.add('action-stop');
 
           const remove = document.createElement("button");
           remove.innerText="Remove";
-          remove.setAttribute('class','action-remove');
+          remove.classList.add('action-remove');
 
           const status = document.createElement("span");
-          status.setAttribute('class','status');
+          status.classList.add('status');
           status.innerText = timers[key].running ? ' [running] ' : '';
 
           const elapsed = document.createElement("span");
-          elapsed.setAttribute('class','totaltime');
+          elapsed.classList.add('totaltime');
           elapsed.innerText = toHrsMins(Math.floor(timers[key].totalTime/60000));
 
           // Append HTML elements
@@ -161,7 +164,6 @@
       */
 
       function clickHandler() {
-        console.log(event.srcElement.parentElement.parentElement);
         switch (event.target.className) {
           case 'action-start':
             // Set all running flags to false
