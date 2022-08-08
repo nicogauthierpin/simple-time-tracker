@@ -25,10 +25,83 @@
         background: #386faf;
         color: #ffffff;
         border-radius: 6px;
-        padding: 6px 18px;
+        height: 32px;
+        width: 64px;
+        padding: 0;
         font-weight: bold;
         cursor: pointer;
+        background-size: 21px;
+        background-repeat: no-repeat;
+        background-position: center;
       }
+
+      button.action-start {
+        background-color: #2cb902;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M188.3 147.1C195.8 142.8 205.1 142.1 212.5 147.5L356.5 235.5C363.6 239.9 368 247.6 368 256C368 264.4 363.6 272.1 356.5 276.5L212.5 364.5C205.1 369 195.8 369.2 188.3 364.9C180.7 360.7 176 352.7 176 344V167.1C176 159.3 180.7 151.3 188.3 147.1V147.1zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z" fill="%23ffffff" /></svg>');
+      }
+
+      button.action-stop {
+        background-color: #bd1212;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M200 160C186.8 160 176 170.8 176 184v144C176 341.3 186.8 352 200 352S224 341.3 224 328v-144C224 170.8 213.3 160 200 160zM312 160C298.8 160 288 170.8 288 184v144c0 13.25 10.75 24 24 24s24-10.75 24-24v-144C336 170.8 325.3 160 312 160zM256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 464c-114.7 0-208-93.31-208-208S141.3 48 256 48s208 93.31 208 208S370.7 464 256 464z" fill="%23ffffff"/></svg>');
+        display: none;
+      }
+
+      button.action-remove {
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM31.1 128H416V448C416 483.3 387.3 512 352 512H95.1C60.65 512 31.1 483.3 31.1 448V128zM111.1 208V432C111.1 440.8 119.2 448 127.1 448C136.8 448 143.1 440.8 143.1 432V208C143.1 199.2 136.8 192 127.1 192C119.2 192 111.1 199.2 111.1 208zM207.1 208V432C207.1 440.8 215.2 448 223.1 448C232.8 448 240 440.8 240 432V208C240 199.2 232.8 192 223.1 192C215.2 192 207.1 199.2 207.1 208zM304 208V432C304 440.8 311.2 448 320 448C328.8 448 336 440.8 336 432V208C336 199.2 328.8 192 320 192C311.2 192 304 199.2 304 208z"  fill="%23ffffff"/></svg>');
+        background-size: 12px;
+        float: right;
+        height: 24px;
+        width: 36px;
+        margin-top: 4px;
+      }
+      
+      button.action-add {
+        display: block;
+        width: 90%;
+        max-width: 480px;
+        margin: 0 auto;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM256 368C269.3 368 280 357.3 280 344V280H344C357.3 280 368 269.3 368 256C368 242.7 357.3 232 344 232H280V168C280 154.7 269.3 144 256 144C242.7 144 232 154.7 232 168V232H168C154.7 232 144 242.7 144 256C144 269.3 154.7 280 168 280H232V344C232 357.3 242.7 368 256 368z" fill="%23ffffff"/></svg>');
+      }
+      
+      button.action-clear-all {
+        width: 160px;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM31.1 128H416V448C416 483.3 387.3 512 352 512H95.1C60.65 512 31.1 483.3 31.1 448V128zM111.1 208V432C111.1 440.8 119.2 448 127.1 448C136.8 448 143.1 440.8 143.1 432V208C143.1 199.2 136.8 192 127.1 192C119.2 192 111.1 199.2 111.1 208zM207.1 208V432C207.1 440.8 215.2 448 223.1 448C232.8 448 240 440.8 240 432V208C240 199.2 232.8 192 223.1 192C215.2 192 207.1 199.2 207.1 208zM304 208V432C304 440.8 311.2 448 320 448C328.8 448 336 440.8 336 432V208C336 199.2 328.8 192 320 192C311.2 192 304 199.2 304 208z"  fill="%23ffffff"/></svg>');
+        background-position: 14px 7px;
+        background-size: 13px;
+        padding-left: 20px;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+      }
+      
+      .timer.running button.action-start {
+        display: none;
+      }
+
+      .timer.running button.action-stop {
+        display: inline;
+      }
+      
+      @keyframes blinker {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      .totaltime {
+        margin-left: 0.25em;
+        font-size: 21px;
+        font-weight: bold;
+        height: 32px;
+        line-height: 32px;
+        display: inline-block;
+        vertical-align: top;
+      }
+
+      .timer.running .totaltime {
+        animation: blinker 2s linear infinite;
+      }
+
 
       input,textarea {
         border: 1px solid #c0c0c0;
@@ -39,20 +112,6 @@
         margin-bottom: 0.5em;
       }
 
-      button.action-start {
-        background-color: #2cb902;
-      }
-
-      button.action-stop {
-        background-color: #bd1212;
-      }
-      button.action-add {
-        display: block;
-        width: 90%;
-        max-width: 480px;
-        margin: 0 auto;
-
-      }      
     </style>
 
 
@@ -115,21 +174,14 @@
           const description = document.createElement("textarea");
           description.value = timers[key].description;
 
-          const start = document.createElement("button");
-          start.innerText="Start";
-          start.classList.add('action-start');
+          const startButton= document.createElement("button");
+          startButton.classList.add('action-start');
 
           const stop = document.createElement("button");
-          stop.innerText="Stop";
           stop.classList.add('action-stop');
 
-          const remove = document.createElement("button");
-          remove.innerText="Remove";
-          remove.classList.add('action-remove');
-
-          const status = document.createElement("span");
-          status.classList.add('status');
-          status.innerText = timers[key].running ? ' [running] ' : '';
+          const removeButton= document.createElement("button");
+          removeButton.classList.add('action-remove');
 
           const elapsed = document.createElement("span");
           elapsed.classList.add('totaltime');
@@ -137,15 +189,14 @@
 
           // Append HTML elements
           document.getElementById("timers").appendChild(newTimer);
-          newTimer.appendChild(textWrap);
-          textWrap.appendChild(title);
-          textWrap.appendChild(description);
-          textWrap.appendChild(status);
-          textWrap.appendChild(elapsed);
           newTimer.appendChild(buttonsWrap);
-          buttonsWrap.appendChild(start);
-          buttonsWrap.appendChild(stop);
-          buttonsWrap.appendChild(remove);
+            buttonsWrap.appendChild(startButton);
+            buttonsWrap.appendChild(stop);
+            buttonsWrap.appendChild(elapsed);
+            buttonsWrap.appendChild(removeButton);
+          newTimer.appendChild(textWrap);
+            textWrap.appendChild(title);
+            textWrap.appendChild(description);
 
         }
       }
@@ -288,6 +339,6 @@
       <button type="button" class="action-clear-all">Clear All Timers</button>
       <div id="timers">
       </div>
-      <button type="button" class="action-add">+</button>
+      <button type="button" class="action-add"></button>
   </body>
 </html>
