@@ -15,7 +15,7 @@
       #timers {
         width: 90%;
         max-width: 480px;
-        margin: 1em auto;
+        margin: 1em auto 0 auto;
       }
       .timer {
         position: relative;
@@ -23,26 +23,58 @@
         background: #fff;
         padding: 1em;
         border-radius: 6px;
-        box-shadow: 3px 3px 9px #0000003d;
+        box-shadow: 2px 2px 3px #00000014;
+        display: flex;
+        flex-direction: row;
+        min-height: 70px;
       }
 
+      .timer.running {
+        box-shadow: 4px 4px 5px #00000029;
+        top: -1px;
+        left: -1px;
+      }
+
+
       .buttonswrap {
-        margin-bottom: 0.5em;
+        width: 100px;
+        text-align: right;
+      }
+
+      .textwrap {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .editwrap {
+        display: none;
+        position: absolute;
+        background: #fff;
+        height: calc(100% - 2em);
+        width: calc(100% - 2em);
+        top: 0;
+        left: 0;
+        border-radius: 6px;
+        padding: 1em;
+        text-align: center;
+      }
+      
+      .timer.editing .editwrap {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
       }
 
       button {
         border: none;
-        background: #386faf;
-        color: #ffffff;
-        border-radius: 6px;
-        height: 32px;
-        width: 64px;
-        padding: 0;
-        font-weight: bold;
-        cursor: pointer;
+        background-color: transparent;
         background-size: 21px;
-        background-repeat: no-repeat;
         background-position: center;
+        background-repeat: no-repeat;
+        padding: 0;
+        cursor: pointer;
       }
 
       /* 
@@ -51,62 +83,76 @@
       */
 
       button.action-start {
-        background-color: #858984;
-        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M188.3 147.1C195.8 142.8 205.1 142.1 212.5 147.5L356.5 235.5C363.6 239.9 368 247.6 368 256C368 264.4 363.6 272.1 356.5 276.5L212.5 364.5C205.1 369 195.8 369.2 188.3 364.9C180.7 360.7 176 352.7 176 344V167.1C176 159.3 180.7 151.3 188.3 147.1V147.1zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z" fill="%23ffffff" /></svg>');
+        width: 28px;
+        height: 28px;
+        background-size: 28px;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM176 168V344C176 352.7 180.7 360.7 188.3 364.9C195.8 369.2 205.1 369 212.5 364.5L356.5 276.5C363.6 272.1 368 264.4 368 256C368 247.6 363.6 239.9 356.5 235.5L212.5 147.5C205.1 142.1 195.8 142.8 188.3 147.1C180.7 151.3 176 159.3 176 168V168z" fill="%235A8FBA" /></svg>');
       }
 
       button.action-stop {
-        background-color: #a14848;
-        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M200 160C186.8 160 176 170.8 176 184v144C176 341.3 186.8 352 200 352S224 341.3 224 328v-144C224 170.8 213.3 160 200 160zM312 160C298.8 160 288 170.8 288 184v144c0 13.25 10.75 24 24 24s24-10.75 24-24v-144C336 170.8 325.3 160 312 160zM256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 464c-114.7 0-208-93.31-208-208S141.3 48 256 48s208 93.31 208 208S370.7 464 256 464z" fill="%23ffffff"/></svg>');
+        width: 28px;
+        height: 28px;
+        background-size: 28px;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM224 191.1v128C224 337.7 209.7 352 192 352S160 337.7 160 320V191.1C160 174.3 174.3 160 191.1 160S224 174.3 224 191.1zM352 191.1v128C352 337.7 337.7 352 320 352S288 337.7 288 320V191.1C288 174.3 302.3 160 319.1 160S352 174.3 352 191.1z" fill="%23E02828"/></svg>');
         display: none;
       }
 
       button.action-edit {
-        float: right;
+        position: absolute;
+        right: 20px;
+        bottom: 10px;
         height: 24px;
-        width: 36px;
-        margin-top: 4px;
+        width: 24px;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M373.1 24.97C401.2-3.147 446.8-3.147 474.9 24.97L487 37.09C515.1 65.21 515.1 110.8 487 138.9L289.8 336.2C281.1 344.8 270.4 351.1 258.6 354.5L158.6 383.1C150.2 385.5 141.2 383.1 135 376.1C128.9 370.8 126.5 361.8 128.9 353.4L157.5 253.4C160.9 241.6 167.2 230.9 175.8 222.2L373.1 24.97zM440.1 58.91C431.6 49.54 416.4 49.54 407 58.91L377.9 88L424 134.1L453.1 104.1C462.5 95.6 462.5 80.4 453.1 71.03L440.1 58.91zM203.7 266.6L186.9 325.1L245.4 308.3C249.4 307.2 252.9 305.1 255.8 302.2L390.1 168L344 121.9L209.8 256.2C206.9 259.1 204.8 262.6 203.7 266.6zM200 64C213.3 64 224 74.75 224 88C224 101.3 213.3 112 200 112H88C65.91 112 48 129.9 48 152V424C48 446.1 65.91 464 88 464H360C382.1 464 400 446.1 400 424V312C400 298.7 410.7 288 424 288C437.3 288 448 298.7 448 312V424C448 472.6 408.6 512 360 512H88C39.4 512 0 472.6 0 424V152C0 103.4 39.4 64 88 64H200z" fill="%23b1b1b1"/></svg>');
       }
 
       button.action-edit-close {
-        height: 24px;
-        width: 36px;
-        margin-top: 4px;
         position: absolute;
-        top: 1em;
-        right: 1em;
+        right: 20px;
+        bottom: 10px;
+        height: 24px;
+        width: 24px;
+        background-size: 14px;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z" fill="%23b1b1b1"/></svg>');
       }
  
       button.action-change-time {
-        margin-right: 4px;
+        width: 42px;
+        line-height: 32px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #7c7c7c;
       }
 
       button.action-remove {
-        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM31.1 128H416V448C416 483.3 387.3 512 352 512H95.1C60.65 512 31.1 483.3 31.1 448V128zM111.1 208V432C111.1 440.8 119.2 448 127.1 448C136.8 448 143.1 440.8 143.1 432V208C143.1 199.2 136.8 192 127.1 192C119.2 192 111.1 199.2 111.1 208zM207.1 208V432C207.1 440.8 215.2 448 223.1 448C232.8 448 240 440.8 240 432V208C240 199.2 232.8 192 223.1 192C215.2 192 207.1 199.2 207.1 208zM304 208V432C304 440.8 311.2 448 320 448C328.8 448 336 440.8 336 432V208C336 199.2 328.8 192 320 192C311.2 192 304 199.2 304 208z"  fill="%23ffffff"/></svg>');
-        background-size: 12px;
-        background-color: #a14848;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM31.1 128H416V448C416 483.3 387.3 512 352 512H95.1C60.65 512 31.1 483.3 31.1 448V128zM111.1 208V432C111.1 440.8 119.2 448 127.1 448C136.8 448 143.1 440.8 143.1 432V208C143.1 199.2 136.8 192 127.1 192C119.2 192 111.1 199.2 111.1 208zM207.1 208V432C207.1 440.8 215.2 448 223.1 448C232.8 448 240 440.8 240 432V208C240 199.2 232.8 192 223.1 192C215.2 192 207.1 199.2 207.1 208zM304 208V432C304 440.8 311.2 448 320 448C328.8 448 336 440.8 336 432V208C336 199.2 328.8 192 320 192C311.2 192 304 199.2 304 208z"  fill="%23E02828"/></svg>');
+        background-size: 18px;
         position: absolute;
-        bottom: 1em;
-        right: 1em;
+        height: 24px;
+        width: 24px;
+        top: 10px;
+        left: 10px;
       }
       
       button.action-add {
         display: block;
         width: 90%;
         max-width: 480px;
+        height: 28px;
+        background-size: 28px;
         margin: 0 auto;
-        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM256 368C269.3 368 280 357.3 280 344V280H344C357.3 280 368 269.3 368 256C368 242.7 357.3 232 344 232H280V168C280 154.7 269.3 144 256 144C242.7 144 232 154.7 232 168V232H168C154.7 232 144 242.7 144 256C144 269.3 154.7 280 168 280H232V344C232 357.3 242.7 368 256 368z" fill="%23ffffff"/></svg>');
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM256 368C269.3 368 280 357.3 280 344V280H344C357.3 280 368 269.3 368 256C368 242.7 357.3 232 344 232H280V168C280 154.7 269.3 144 256 144C242.7 144 232 154.7 232 168V232H168C154.7 232 144 242.7 144 256C144 269.3 154.7 280 168 280H232V344C232 357.3 242.7 368 256 368z" fill="%23b1b1b1"/></svg>');
       }
       
       button.action-clear-all {
         width: 160px;
-        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM31.1 128H416V448C416 483.3 387.3 512 352 512H95.1C60.65 512 31.1 483.3 31.1 448V128zM111.1 208V432C111.1 440.8 119.2 448 127.1 448C136.8 448 143.1 440.8 143.1 432V208C143.1 199.2 136.8 192 127.1 192C119.2 192 111.1 199.2 111.1 208zM207.1 208V432C207.1 440.8 215.2 448 223.1 448C232.8 448 240 440.8 240 432V208C240 199.2 232.8 192 223.1 192C215.2 192 207.1 199.2 207.1 208zM304 208V432C304 440.8 311.2 448 320 448C328.8 448 336 440.8 336 432V208C336 199.2 328.8 192 320 192C311.2 192 304 199.2 304 208z"  fill="%23ffffff"/></svg>');
-        background-position: 14px 7px;
-        background-size: 13px;
-        padding-left: 20px;
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M180.2 243.1C185 263.9 162.2 280.2 144.1 268.8L119.8 253.6l-50.9 81.43c-13.33 21.32 2.004 48.98 27.15 48.98h32.02c17.64 0 31.98 14.32 31.98 31.96c0 17.64-14.34 32.05-31.98 32.05H96.15c-75.36 0-121.3-82.84-81.47-146.8L65.51 219.8L41.15 204.5C23.04 193.1 27.66 165.5 48.48 160.7l91.43-21.15C148.5 137.7 157.2 142.9 159.2 151.6L180.2 243.1zM283.1 78.96l41.25 66.14l-24.25 15.08c-18.16 11.31-13.57 38.94 7.278 43.77l91.4 21.15c8.622 1.995 17.23-3.387 19.21-12.01l21.04-91.43c4.789-20.81-17.95-37.05-36.07-25.76l-24.36 15.2L337.4 45.14c-37.58-60.14-125.2-60.18-162.8-.0617L167.2 56.9C157.9 71.75 162.5 91.58 177.3 100.9c14.92 9.359 34.77 4.886 44.11-10.04l7.442-11.89C241.6 58.58 270.9 59.33 283.1 78.96zM497.3 301.3l-16.99-27.26c-9.336-14.98-29.06-19.56-44.04-10.21c-14.94 9.318-19.52 29.15-10.18 44.08l16.99 27.15c13.35 21.32-1.984 49-27.14 49h-95.99l.0234-28.74c0-21.38-25.85-32.09-40.97-16.97l-66.41 66.43c-6.222 6.223-6.222 16.41 .0044 22.63l66.42 66.34c15.12 15.1 40.95 4.386 40.95-16.98l-.0234-28.68h95.86C491.2 448.1 537.2 365.2 497.3 301.3z"  fill="%23b1b1b1"/></svg>');
+        position: fixed;
+        bottom: 1em;
+        right: 1em;
+        width: 24px;
+        height: 24px;
+        background-size: 24px;
       }
 
       .timer.running button.action-start {
@@ -128,13 +174,12 @@
       }
 
       .totaltime {
-        margin-left: 0.25em;
-        font-size: 21px;
+        font-size: 18px;
         font-weight: bold;
-        height: 32px;
-        line-height: 32px;
+        line-height: 30px;
         display: inline-block;
         vertical-align: top;
+        margin-right: 0.5em;
       }
 
       .timer.running .totaltime {
@@ -142,45 +187,46 @@
       }
 
       .timer.editing .totaltime {
-        display: block;
-        margin: 1em 0;
+        margin: 0;
+        line-height: 32px;
+        width: 70px;
+        padding-left: 5px; /* for visual alignment */
       }
 
 
-      input,textarea {
-        border: 1px solid #c0c0c0;
-        border-radius: 6px;
-        padding: 9px;
-        display: block;
-        width: calc(100% - 14px);
-        margin-bottom: 0.5em;
+      input {
+        border: none;
+        width: 100%;
         font-family: Arial, sans-serif;
+        font-size: 13px;
+        font-weight: bold;
+        padding: 0;
+        margin: 6px 0 10px 0;
+        text-overflow: ellipsis;
       }
 
       textarea {
-        height: 6em;
+        border: none;
+        width: 100%;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        color: #656565;
+        resize: none;
+        padding: 0;
+        flex-grow: 1;
+        text-overflow: ellipsis;
       }
 
-      input,textarea:focus {
+      input::placeholder,
+      textarea::placeholder {
+        color: #b1b1b1;
+      }
+
+      input:focus,
+      textarea:focus {
         outline: none;
       }
 
-      .editwrap {
-        display: none;
-        position: absolute;
-        background: #fff;
-        height: calc(100% - 2em);
-        width: calc(100% - 2em);
-        top: 0;
-        left: 0;
-        border-radius: 6px;
-        padding: 1em;
-        text-align: center;
-      }
-      
-      .timer.editing .editwrap {
-        display: block;
-      }
 
     </style>
 
@@ -247,24 +293,26 @@
           editWrap.classList.add("editwrap");
 
           const title = document.createElement("input");
+          title.setAttribute('placeholder','Title');
+          title.setAttribute('spellcheck','false');
           title.value = timers[key].title;
 
           const description = document.createElement("textarea");
+          description.setAttribute('placeholder','Description');
+          description.setAttribute('spellcheck','false');
           description.value = timers[key].description;
 
           const startButton= document.createElement("button");
           startButton.classList.add('action-start');
 
-          const stop = document.createElement("button");
-          stop.classList.add('action-stop');
+          const stopButton = document.createElement("button");
+          stopButton.classList.add('action-stop');
 
           const editButton= document.createElement("button");
           editButton.classList.add('action-edit');
-          editButton.textContent = "Edit";
 
           const editCloseButton= document.createElement("button");
           editCloseButton.classList.add('action-edit-close');
-          editCloseButton.textContent = "X";
 
 
           const plus1Button= document.createElement("button");
@@ -301,14 +349,14 @@
           // Append HTML elements
           document.getElementById("timers").appendChild(newTimer);
 
-          newTimer.appendChild(buttonsWrap);
-            buttonsWrap.appendChild(startButton);
-            buttonsWrap.appendChild(stop);
-            buttonsWrap.appendChild(elapsed);
-            buttonsWrap.appendChild(editButton);
           newTimer.appendChild(textWrap);
             textWrap.appendChild(title);
             textWrap.appendChild(description);
+          newTimer.appendChild(buttonsWrap);
+            buttonsWrap.appendChild(elapsed);
+            buttonsWrap.appendChild(startButton);
+            buttonsWrap.appendChild(stopButton);
+            buttonsWrap.appendChild(editButton);
           
           // Only render the edit window if "editing" flag is true. The original content must always be rendered to keep the original div size.
           if(timers[key].editing) {
@@ -515,7 +563,7 @@
 
   </head>
   <body>
-      <button type="button" class="action-clear-all">Clear All Timers</button>
+      <button type="button" class="action-clear-all"></button>
       <div id="timers">
       </div>
       <button type="button" class="action-add"></button>
