@@ -257,7 +257,6 @@
         }
         // update localStorage for data persistence
         window.localStorage.setItem('timersString', JSON.stringify(timers));
-        console.log('Update Local');
       }
 
       /*
@@ -388,7 +387,6 @@
       */
 
       function clickHandler() {
-        console.log(event.target.innerText);
         switch (event.target.className) {
           case 'action-start':
             // Set all running flags to false
@@ -472,7 +470,6 @@
 
 
           case 'action-remove':
-            console.log('REMOVE');
             // Remove selected timer
             timers.splice(event.srcElement.parentElement.parentElement.dataset.id,1);
             // update localStorage for data persistence
