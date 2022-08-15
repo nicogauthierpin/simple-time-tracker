@@ -8,9 +8,6 @@ _Work perpetually in progress._
 
 ## License
 
-This work is licensed under a
-[Creative Commons Attribution 4.0 International License][cc-by].
-
-[![CC BY 4.0][cc-by-shield]][cc-by]
+[Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 Icons by [FontAwesome](https://fontawesome.com).
